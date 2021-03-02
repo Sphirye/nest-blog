@@ -3,14 +3,14 @@ import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
 export class PostEntity {
     @PrimaryGeneratedColumn()
-    id: number;
+    id?: number = undefined;
 
     @Column()
-    title: string;
+    title!: string
 
     @Column()
-    description: string;
+    description!: string
 
     @Column()
-    content: string;
+    content!: string
 }

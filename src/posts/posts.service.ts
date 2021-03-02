@@ -3,6 +3,7 @@ import { PostInterface } from "./interfaces/Post";
 import { Connection, getConnection, getRepository } from 'typeorm';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PostEntity } from './entity/post.entity';
+import { title } from 'process';
 
 @Injectable()
 export class PostService{
@@ -16,13 +17,17 @@ export class PostService{
         return post;
     }
 
-    async post(newPostBody: CreatePostDto) {
-        const newPost = await getRepository(PostEntity).save(newPostBody);
+    async create(title: string, description: string, content: string) {
+        const post = new PostEntity()
+        if (title.length > 0) post.title = title
+        post.description = description
+        post.content = content
+        const newPost = await getRepository(PostEntity).save(post);
         await getConnection().query('INSERT INTO posts SET ?', [newPost]);
         return "Post Created!";
     }
 
-    async patch(postId: number, newPostBody: CreatePostDto) {
+    async update(postId: number, newPostBody: CreatePostDto) {
         const post = await getRepository(PostEntity).findOne(postId);
         if (post) {
             const updatedPostBody = await getRepository(PostEntity).merge(post, newPostBody);
